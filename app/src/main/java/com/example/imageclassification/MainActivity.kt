@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -15,11 +14,10 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import com.example.imageclassification.ml.MobilenetV110224Quant
+import com.example.imageclassification.ml.Model
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
-import java.util.jar.Manifest
 
 class MainActivity : AppCompatActivity() {
 
@@ -69,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         // handling permissions
         checkandGetpermissions()
 
-        val labels = application.assets.open("labels.txt").bufferedReader().use { it.readText() }.split("\n")
+        val labels = application.assets.open("labels1.txt").bufferedReader().use { it.readText() }.split("\n")
 
         select_image_button.setOnClickListener(View.OnClickListener {
             Log.d("mssg", "button pressed")
@@ -81,7 +79,10 @@ class MainActivity : AppCompatActivity() {
 
         make_prediction.setOnClickListener(View.OnClickListener {
             var resized = Bitmap.createScaledBitmap(bitmap, 224, 224, true)
-            val model = MobilenetV110224Quant.newInstance(this)
+            //val model = MobilenetV110224Quant.newInstance(this)
+
+            val model = Model.newInstance(this);
+
 
             var tbuffer = TensorImage.fromBitmap(resized)
             var byteBuffer = tbuffer.buffer
@@ -130,7 +131,7 @@ class MainActivity : AppCompatActivity() {
         var ind = 0;
         var min = 0.0f;
 
-        for(i in 0..1000)
+        for(i in 0..1)
         {
             if(arr[i] > min)
             {
